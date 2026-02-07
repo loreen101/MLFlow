@@ -1,0 +1,18 @@
+digest: 6fe25ac5
+name: dataset
+profile: '{"num_rows": 4878, "num_elements": 58536}'
+schema: '{"mlflow_colspec": [{"type": "double", "name": "standardscaler__CreditScore",
+  "required": false}, {"type": "double", "name": "standardscaler__Age", "required":
+  false}, {"type": "double", "name": "standardscaler__Tenure", "required": false},
+  {"type": "double", "name": "standardscaler__Balance", "required": false}, {"type":
+  "double", "name": "standardscaler__NumOfProducts", "required": false}, {"type":
+  "double", "name": "standardscaler__HasCrCard", "required": false}, {"type": "double",
+  "name": "standardscaler__IsActiveMember", "required": false}, {"type": "double",
+  "name": "standardscaler__EstimatedSalary", "required": false}, {"type": "double",
+  "name": "onehotencoder__Geography_Germany", "required": false}, {"type": "double",
+  "name": "onehotencoder__Geography_Spain", "required": false}, {"type": "double",
+  "name": "onehotencoder__Gender_Male", "required": false}, {"type": "double", "name":
+  "Exited", "required": false}]}'
+source: '{"tags": {"mlflow.user": "Loreen", "mlflow.source.name": "./src/main.py",
+  "mlflow.source.type": "LOCAL", "mlflow.source.git.commit": "271e7de9b1fb60c38ef555be5b57228b0560b07e"}}'
+source_type: code

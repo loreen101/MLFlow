@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/857583016525272847/1758d5a0f38c4a0b98bc23be47e2681c/artifacts
+end_time: 1770493728735
+entry_point_name: ''
+experiment_id: '857583016525272847'
+lifecycle_stage: active
+run_id: 1758d5a0f38c4a0b98bc23be47e2681c
+run_name: CP_Run_2-SVM
+run_uuid: 1758d5a0f38c4a0b98bc23be47e2681c
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1770493715386
+status: 3
+tags: []
+user_id: Loreen

@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/857583016525272847/480bf9de57d24a6989b642fe1edc2d57/artifacts
+end_time: 1770493888236
+entry_point_name: ''
+experiment_id: '857583016525272847'
+lifecycle_stage: active
+run_id: 480bf9de57d24a6989b642fe1edc2d57
+run_name: CP_Run_3-Random_Forest
+run_uuid: 480bf9de57d24a6989b642fe1edc2d57
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1770493875212
+status: 3
+tags: []
+user_id: Loreen

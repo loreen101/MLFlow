@@ -1,0 +1,15 @@
+aliases:
+- production
+creation_timestamp: 1770494198804
+current_stage: None
+description: Model with best metrics so far
+last_updated_timestamp: 1770494246123
+name: Churn Prediction
+run_id: 1758d5a0f38c4a0b98bc23be47e2681c
+run_link: ''
+source: mlflow-artifacts:/857583016525272847/1758d5a0f38c4a0b98bc23be47e2681c/artifacts/models/svm
+status: READY
+status_message: null
+storage_location: mlflow-artifacts:/857583016525272847/1758d5a0f38c4a0b98bc23be47e2681c/artifacts/models/svm
+user_id: null
+version: 1
