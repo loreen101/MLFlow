@@ -3,11 +3,14 @@ This module contains functions to preprocess and train the model
 for bank consumer churn prediction.
 """
 
+import pickle
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.utils import resample
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.compose import make_column_transformer
 from sklearn.preprocessing import OneHotEncoder,  StandardScaler
 from sklearn.metrics import (
@@ -20,6 +23,11 @@ from sklearn.metrics import (
 )
 
 ### Import MLflow
+import mlflow
+from mlflow.models.signature import infer_signature
+
+import os
+os.environ["LOGNAME"] = "Loreen"
 
 def rebalance(data):
     """
@@ -106,8 +114,14 @@ def preprocess(df):
     X_test = col_transf.transform(X_test)
     X_test = pd.DataFrame(X_test, columns=col_transf.get_feature_names_out())
 
-    # Log the transformer as an artifact
+    artifact_path = r"./col_transformer.pkl"
+    with open(artifact_path, 'wb') as f:
+            pickle.dump(col_transf, f)
 
+    # Log the transformer as an artifact
+    mlflow.log_artifact(artifact_path, artifact_path="artifacts/col_transformer")
+
+    
     return col_transf, X_train, X_test, y_train, y_test
 
 
@@ -122,41 +136,80 @@ def train(X_train, y_train):
     Returns:
         LogisticRegression: trained logistic regression model
     """
+
     log_reg = LogisticRegression(max_iter=1000)
     log_reg.fit(X_train, y_train)
 
+    # svm = SVC(kernel='rbf', gamma=0.5, max_iter=1000)
+    # svm.fit(X_train, y_train)
+
+    # use random forest to classify the data
+    # use 5 estimators
+    # use depth = 1
+    # random_forest_classifier = RandomForestClassifier(n_estimators=5, max_depth=3)
+    # random_forest_classifier.fit(X_train, y_train)
+    
+
     ### Log the model with the input and output schema
     # Infer signature (input and output schema)
+    y_pred = log_reg.predict(X_train)  
+    signature = infer_signature(X_train, y_pred)
 
     # Log model
+    
+    mlflow.sklearn.log_model(log_reg, artifact_path="models/logistic_regression", signature=signature)
 
     ### Log the data
+    data = pd.concat([X_train, y_train], axis=1)
+    dataset = mlflow.data.from_pandas(data)
+    mlflow.log_input(dataset)
+
+
 
     return log_reg
 
 
 def main():
     ### Set the tracking URI for MLflow
+    mlflow.set_tracking_uri("http://127.0.0.1:5000")
 
     ### Set the experiment name
+    mlflow.set_experiment("Churn Prediction Experiment")
 
 
     ### Start a new run and leave all the main function code as part of the experiment
+    mlflow.start_run(run_name="CP_Run_2-Random_Forest")
 
-    df = pd.read_csv("data/Churn_Modelling.csv")
+
+    df = pd.read_csv("dataset/Churn_Modelling.csv")
     col_transf, X_train, X_test, y_train, y_test = preprocess(df)
 
     ### Log the max_iter parameter
+    mlflow.log_param("max_iter", 1000)
 
     model = train(X_train, y_train)
 
-    
     y_pred = model.predict(X_test)
 
     ### Log metrics after calculating them
+    accuracy = model.score(X_test, y_test)
+    precision = precision_score(y_test, y_pred)
+    recall = recall_score(y_test, y_pred)   
+    f1 = f1_score(y_test, y_pred)
+    print(f"Accuracy: {accuracy}")
+    print(f"Precision: {precision}")        
+    print(f"Recall: {recall}")
+    print(f"F1 Score: {f1}")
 
+    mlflow.log_metrics({
+        "accuracy": accuracy,
+        "precision": precision,
+        "recall": recall,
+        "f1_score": f1
+    })
 
     ### Log tag
+    mlflow.set_tag("model_type", "random_forest")
 
 
     
@@ -167,8 +220,11 @@ def main():
     conf_mat_disp.plot()
     
     # Log the image as an artifact in MLflow
+    plt.savefig("./confusion_matrix.png")
+    mlflow.log_artifact("./confusion_matrix.png", artifact_path="artifacts/confusion_matrix")
     
     plt.show()
+    mlflow.end_run()
 
 
 if __name__ == "__main__":
