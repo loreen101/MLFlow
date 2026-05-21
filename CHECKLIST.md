@@ -2,49 +2,49 @@
 
 ## Setup
 
-- [ ] Fork <https://github.com/ishraq-hassan/MLOps-Course-Labs>
-- [ ] Clone your fork locally
-- [ ] Install dependencies: `uv sync` or `pip install -e ".[dev]"`
-- [ ] Install pre-commit hooks: `uv run pre-commit install`
-- [ ] Place your best churn model into `data/model.joblib`
+- [done] Fork <https://github.com/ishraq-hassan/MLOps-Course-Labs>
+- [done] Clone your fork locally
+- [done] Install dependencies: `uv sync` or `pip install -e ".[dev]"`
+- [done] Install pre-commit hooks: `uv run pre-commit install`
+- [done] Place your best churn model into `data/model.joblib`
 
 ## Logger (`app/logger_setup.py`)
 
-- [ ] TODO 1: Set up basic logging with level INFO
-- [ ] TODO 2: Create and return a named logger
+- [done] TODO 1: Set up basic logging with level INFO
+- [done] TODO 2: Create and return a named logger
 
 ## Model Utils (`app/model_utils.py`)
 
-- [ ] TODO 1: Load your model (and preprocessor) at module level
-- [ ] TODO 2: Implement `preprocess()`
-- [ ] TODO 3: Call `preprocess()` inside `predict_churn()`
-- [ ] TODO 4: Implement `predict_churn()` using the model
+- [done] TODO 1: Load your model (and preprocessor) at module level
+- [done] TODO 2: Implement `preprocess()`
+- [done] TODO 3: Call `preprocess()` inside `predict_churn()`
+- [done] TODO 4: Implement `predict_churn()` using the model
 - [ ] TODO 5: Fill in sample features
 - [ ] Verify: `uv run python -m app.model_utils`
 
 ## API (`main.py`)
 
-- [ ] TODO 1: Define `ChurnRequest` fields
-- [ ] TODO 2: Create `GET /`
-- [ ] TODO 3: Create `GET /health`
-- [ ] TODO 4: Create `POST /predict` with logging
-- [ ] TODO 5: Register handlers in `Litestar(route_handlers=[...])`
+- [done] TODO 1: Define `ChurnRequest` fields
+- [done] TODO 2: Create `GET /`
+- [done] TODO 3: Create `GET /health`
+- [done] TODO 4: Create `POST /predict` with logging
+- [done] TODO 5: Register handlers in `Litestar(route_handlers=[...])`
 
 ## Run & Screenshot
 
-- [ ] Start the server: `uv run litestar --app main:app run --reload`
-- [ ] Open <http://localhost:8000/schema/swagger>
-- [ ] **Take a screenshot of the Swagger UI**
+- [done] Start the server: `uv run litestar --app main:app run --reload`
+- [done] Open <http://localhost:8000/schema/swagger>
+- [done] **Take a screenshot of the Swagger UI**
 
 ## Tests (`tests/test_main.py`)
 
-- [ ] TODO 1: Function test for `predict_churn`
-- [ ] TODO 3: Endpoint test for `POST /predict`
-- [ ] TODO 4: Endpoint test for `GET /health`
-- [ ] TODO 5: Endpoint test for `GET /`
-- [ ] Run: `uv run pytest tests/ -v --cov=app --cov=main --cov-report=term-missing`
-- [ ] **Coverage is above 70%**
-- [ ] **Take a screenshot of the results + coverage**
+- [done] TODO 1: Function test for `predict_churn`
+- [done] TODO 3: Endpoint test for `POST /predict`
+- [done] TODO 4: Endpoint test for `GET /health`
+- [done] TODO 5: Endpoint test for `GET /`
+- [done] Run: `uv run pytest tests/ -v --cov=app --cov=main --cov-report=term-missing`
+- [done] **Coverage is above 70%**
+- [done] **Take a screenshot of the results + coverage**
 
 ## Bonus
 

@@ -2,9 +2,17 @@
 Logging configuration.
 """
 
+import logging
+
 
 def setup_logging():
-    # TODO 1: Set up basic logging with level INFO using logging.basicConfig()
+    # Set up basic logging with level INFO and a simple formatter
+    logging.basicConfig(
+        level=logging.INFO,
+        # timestamp - logger name - log level - message
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    )
 
-    # TODO 2: Create a named logger using logging.getLogger() and return it
-    pass
+    # Create and return a named logger for the application
+    logger = logging.getLogger("mlflow_app")
+    return logger

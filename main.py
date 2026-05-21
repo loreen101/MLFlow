@@ -7,9 +7,9 @@ Then open:
     http://localhost:8000/schema/swagger
 """
 
-from litestar import Litestar
+from litestar import Litestar, get, post, Response
 from pydantic import BaseModel
-
+from app.model_utils import predict_churn
 from app.logger_setup import setup_logging
 
 logger = setup_logging()
@@ -19,31 +19,61 @@ logger = setup_logging()
 # Request Schema
 # ---------------------------------------------------------------------------
 class ChurnRequest(BaseModel):
-    # TODO 1: Add one field (type float) per feature your model expects
-    pass
+    CreditScore: float
+    Geography: str
+    Gender: str
+    Age: float
+    Tenure: float
+    Balance: float
+    NumOfProducts: float
+    HasCrCard: float
+    IsActiveMember: float
+    EstimatedSalary: float
 
 
 # ---------------------------------------------------------------------------
 # Endpoints
 # ---------------------------------------------------------------------------
 
-# TODO 2: Create a GET endpoint at "/" that returns a welcome message
-#         Log that the home endpoint was accessed
 
-# TODO 3: Create a GET endpoint at "/health" that returns {"status": "healthy"}
+@get("/", sync_to_thread=False)
+def home() -> dict[str, str]:
+    """GET / - Welcome message for the churn prediction API."""
+    logger.info("Home endpoint accessed")
+    return {"message": "Welcome to the churn prediction API"}
 
-# TODO 4: Create a POST endpoint at "/predict" that:
-#         - Accepts a ChurnRequest as the data parameter
-#         - Extracts features into a list
-#         - Calls predict_churn(features)
-#         - Returns the prediction
-#         - Logs the input features and the prediction result
+
+@get("/health", sync_to_thread=False)
+def health() -> dict[str, str]:
+    """GET /health - Health check endpoint."""
+    logger.info("Health endpoint accessed")
+    return {"status": "healthy"}
+
+
+@post("/predict", sync_to_thread=False)
+def predict(data: ChurnRequest) -> dict[str, int]:
+    try:
+        features = [
+            data.CreditScore,
+            data.Geography,
+            data.Gender,
+            data.Age,
+            data.Tenure,
+            data.Balance,
+            data.NumOfProducts,
+            data.HasCrCard,
+            data.IsActiveMember,
+            data.EstimatedSalary,
+        ]
+        prediction = predict_churn(features)
+        logger.info(f"Prediction made for features: {features} - Result: {prediction}")
+        return Response({"prediction": int(prediction)}, status_code=200)
+    except Exception as e:
+        logger.error(f"Prediction failed: {e}")
+        return Response({"error": "Invalid input"}, status_code=400)
 
 
 # ---------------------------------------------------------------------------
 # App
 # ---------------------------------------------------------------------------
-# TODO 5: Register your endpoint functions in the list below
-app = Litestar(
-    route_handlers=[],
-)
+app = Litestar(route_handlers=[home, health, predict])
