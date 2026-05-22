@@ -86,5 +86,5 @@ jobs:
                     docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/mlflow-repository:churn-prediction-13
                     docker stop mlflow-container || true
                     docker rm mlflow-container || true
-                    docker run -d --name mlflow-container -p 8000:8000 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/mlflow-repository:churn-prediction-13
+                    docker run -d --name mlflow-container -p 443:8000 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/mlflow-repository:churn-prediction-13
                 
