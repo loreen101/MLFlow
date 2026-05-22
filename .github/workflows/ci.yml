@@ -71,7 +71,7 @@ jobs:
               uses: appleboy/ssh-action@v0.1.10
               with:
                 host: ${{ secrets.EC2_HOST }}
-                username: ec2-user
+                username: ${{ secrets.EC2_USERNAME }}
                 key: ${{ secrets.EC2_SSH_KEY }}
                 script: |
                     docker pull ${{ steps.login-ecr.outputs.registry }}/mlflow-repository:churn-prediction-13:latest
