@@ -54,11 +54,11 @@
 
 ## Submit
 
-- [ ] Commit the `uv.lock` file (**points will be deducted if missing**)
-- [ ] Push to your fork
-- [ ] **Upload** the Swagger UI screenshot
-- [ ] **Upload** the test results and coverage screenshot
-- [ ] **Upload** the link to your repo
+- [x] Commit the `uv.lock` file (**points will be deducted if missing**)
+- [x] Push to your fork
+- [x] **Upload** the Swagger UI screenshot
+- [x] **Upload** the test results and coverage screenshot
+- [x] **Upload** the link to your repo
 
 ---
 

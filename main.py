@@ -36,22 +36,28 @@ class ChurnRequest(BaseModel):
 # ---------------------------------------------------------------------------
 
 
-@get("/", sync_to_thread=False)
-def home() -> dict[str, str]:
+@get(
+    "/",
+)
+async def home() -> dict[str, str]:
     """GET / - Welcome message for the churn prediction API."""
     logger.info("Home endpoint accessed")
     return {"message": "Welcome to the churn prediction API"}
 
 
-@get("/health", sync_to_thread=False)
-def health() -> dict[str, str]:
+@get(
+    "/health",
+)
+async def health() -> dict[str, str]:
     """GET /health - Health check endpoint."""
     logger.info("Health endpoint accessed")
     return {"status": "healthy"}
 
 
-@post("/predict", sync_to_thread=False)
-def predict(data: ChurnRequest) -> dict[str, int]:
+@post(
+    "/predict",
+)
+async def predict(data: ChurnRequest) -> dict[str, int]:
     try:
         features = [
             data.CreditScore,
