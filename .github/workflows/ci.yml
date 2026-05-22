@@ -1,0 +1,82 @@
+on:
+    push:
+        branches: [ main ]
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            - name: Set up Python
+              uses: actions/setup-python@v2
+              with:
+                python-version: 3.12
+
+            - name: Install dependencies
+              run: |
+                pip install -r requirements.txt
+                pip install pytest pytest-cov
+
+            - name: Run tests
+              run: |
+                pytest tests/ -v --cov=app --cov=main --cov-report=term-missing
+    
+    build-and-push-to-ECR:
+        needs: test
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v1
+              with:
+                aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                aws-region: ${{ vars.AWS_REGION }}
+
+            - name: Login to Amazon ECR
+              id: login-ecr
+              uses: aws-actions/amazon-ecr-login@v1
+
+            - name: Build, tag, and push Docker image to Amazon ECR
+              env:
+                ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+                ECR_REPOSITORY: mlflow-repository
+                IMAGE_TAG: churn-prediction-13:latest
+              run: |
+                docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+                docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+    deploy-to-ec2:
+        needs: build-and-push-to-ECR
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v1
+              with:
+                aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                aws-region: ${{ vars.AWS_REGION }}
+
+            - name: Login to Amazon ECR
+              id: login-ecr
+              uses: aws-actions/amazon-ecr-login@v1
+
+            - name: Deploy to EC2 instance
+              uses: appleboy/ssh-action@v0.1.10
+              with:
+                host: ${{ secrets.EC2_HOST }}
+                username: ec2-user
+                key: ${{ secrets.EC2_SSH_KEY }}
+                script: |
+                    docker pull ${{ steps.login-ecr.outputs.registry }}/mlflow-repository:churn-prediction-13:latest
+                    docker stop mlflow-container || true
+                    docker rm mlflow-container || true
+                    docker run -d --name mlflow-container -p 5000:443 ${{ steps.login-ecr.outputs.registry }}/mlflow-repository:churn-prediction-13:latest
+
+    
