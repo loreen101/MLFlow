@@ -78,9 +78,13 @@ jobs:
                 username: ${{ secrets.EC2_USERNAME }}
                 key: ${{ secrets.EC2_SSH_KEY }}
                 script: |
-                    docker pull ${{ steps.login-ecr.outputs.registry }}/mlflow-repository:churn-prediction-13
+                    # Log in to ECR from EC2
+                    aws ecr get-login-password --region ${{ vars.AWS_REGION }} \
+                        | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
+
+                    # Pull and run container
+                    docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/mlflow-repository:churn-prediction-13
                     docker stop mlflow-container || true
                     docker rm mlflow-container || true
-                    docker run -d --name mlflow-container -p 5000:443 ${{ steps.login-ecr.outputs.registry }}/mlflow-repository:churn-prediction-13
-
-    
+                    docker run -d --name mlflow-container -p 8000:8000 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/mlflow-repository:churn-prediction-13
+                
