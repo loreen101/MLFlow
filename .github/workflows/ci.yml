@@ -40,6 +40,10 @@ jobs:
               id: login-ecr
               uses: aws-actions/amazon-ecr-login@v1
 
+            - name: Create ECR repository if it doesn't exist
+              run: |
+                aws ecr describe-repositories --repository-names mlflow-repository --region ${{ vars.AWS_REGION }} || aws ecr create-repository --repository-name mlflow-repository --region ${{ vars.AWS_REGION }}
+
             - name: Build, tag, and push Docker image to Amazon ECR
               env:
                 ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
